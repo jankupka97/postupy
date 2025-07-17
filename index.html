@@ -97,6 +97,7 @@
       width: auto;
       padding: 0.4rem 0.8rem;
       font-size: 0.9rem;
+      margin-right: 0.5rem;
     }
 
     .hidden {
@@ -146,7 +147,8 @@
   </footer>
 
   <script>
-    const postupy = [];
+    let postupy = JSON.parse(localStorage.getItem("postupy")) || [];
+    let editIndex = -1;
 
     function toggleForm() {
       const form = document.getElementById('formular');
@@ -160,14 +162,39 @@
       const odkaz = document.getElementById("odkaz").value;
       const vkladatel = document.getElementById("vkladatel").value;
       const soubor = document.getElementById("soubor").files[0]?.name || "";
-
       const datum = new Date().toLocaleDateString("cs-CZ");
 
       const novyPostup = { nazev, klicova, text, odkaz, vkladatel, soubor, datum };
-      postupy.push(novyPostup);
 
+      if (editIndex >= 0) {
+        postupy[editIndex] = novyPostup;
+        editIndex = -1;
+      } else {
+        postupy.push(novyPostup);
+      }
+
+      localStorage.setItem("postupy", JSON.stringify(postupy));
       zobrazSpravu();
       document.querySelectorAll("#formular input, #formular textarea").forEach(el => el.value = "");
+    }
+
+    function smazatPostup(index) {
+      if (confirm("Opravdu chceš smazat tento pracovní postup?")) {
+        postupy.splice(index, 1);
+        localStorage.setItem("postupy", JSON.stringify(postupy));
+        zobrazSpravu();
+      }
+    }
+
+    function upravitPostup(index) {
+      const p = postupy[index];
+      document.getElementById("nazev").value = p.nazev;
+      document.getElementById("klicova").value = p.klicova;
+      document.getElementById("text").value = p.text;
+      document.getElementById("odkaz").value = p.odkaz;
+      document.getElementById("vkladatel").value = p.vkladatel;
+      editIndex = index;
+      document.getElementById("formular").classList.remove("hidden");
     }
 
     function zobrazSpravu() {
@@ -182,11 +209,64 @@
             ${p.odkaz ? `<p><a href="${p.odkaz}" target="_blank">Externí odkaz</a></p>` : ""}
             ${p.soubor ? `<p><strong>Soubor:</strong> ${p.soubor}</p>` : ""}
             <p><small>Vložil: ${p.vkladatel}, dne: ${p.datum}</small></p>
+            <button class="btn-small btn" onclick="upravitPostup(${index})">Upravit</button>
+            <button class="btn-small btn-outline" onclick="smazatPostup(${index})">Smazat</button>
           </div>
         `;
       });
     }
+
+    function searchPostupy() {
+      const dotaz = document.getElementById("search").value.toLowerCase();
+      const vysledky = document.getElementById("vysledky");
+      vysledky.innerHTML = "";
+      const filtrovane = postupy.filter(p => p.klicova.toLowerCase().includes(dotaz));
+      if (filtrovane.length === 0) {
+        vysledky.innerHTML = "<p>Žádné výsledky nenalezeny.</p>";
+        return;
+      }
+      filtrovane.forEach(p => {
+        vysledky.innerHTML += `
+          <div class="postup">
+            <h3>${p.nazev}</h3>
+            <p><strong>Klíčová slova:</strong> ${p.klicova}</p>
+            <p>${p.text}</p>
+            ${p.odkaz ? `<p><a href="${p.odkaz}" target="_blank">Externí odkaz</a></p>` : ""}
+            ${p.soubor ? `<p><strong>Soubor:</strong> ${p.soubor}</p>` : ""}
+            <p><small>Vložil: ${p.vkladatel}, dne: ${p.datum}</small></p>
+          </div>
+        `;
+      });
+    }
+
+    function clearSearch() {
+      document.getElementById("search").value = "";
+      document.getElementById("vysledky").innerHTML = "";
+    }
+
+    function showAll() {
+      const vysledky = document.getElementById("vysledky");
+      vysledky.innerHTML = "";
+      postupy.forEach(p => {
+        vysledky.innerHTML += `
+          <div class="postup">
+            <h3>${p.nazev}</h3>
+            <p><strong>Klíčová slova:</strong> ${p.klicova}</p>
+            <p>${p.text}</p>
+            ${p.odkaz ? `<p><a href="${p.odkaz}" target="_blank">Externí odkaz</a></p>` : ""}
+            ${p.soubor ? `<p><strong>Soubor:</strong> ${p.soubor}</p>` : ""}
+            <p><small>Vložil: ${p.vkladatel}, dne: ${p.datum}</small></p>
+          </div>
+        `;
+      });
+    }
+
+    // Inicializace při načtení
+    window.onload = () => {
+      zobrazSpravu();
+    };
   </script>
 </body>
 </html>
+
 
