@@ -63,11 +63,34 @@
     .right-align {
       text-align: right;
     }
+    #nactiSouborPublic {
+      display: none;
+    }
+    #nactiLabel {
+      display: inline-block;
+      padding: 0.75rem;
+      width: 100%;
+      text-align: center;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      background-color: #c0392b;
+      color: white;
+    }
+    #nactiLabel.nacteno {
+      background-color: #27ae60;
+    }
+    #verzeZahlavi {
+      font-size: 0.9rem;
+      margin-top: 0.2rem;
+    }
   </style>
 </head>
 <body>
   <header>
     <h1>Postupy IOS</h1>
+    <div>Operační odbor Krajského ředitelství policie Plzeňského kraje</div>
+    <div id="verzeZahlavi"></div>
   </header>
 
   <div class="container" id="vyhledavaniSekce">
@@ -78,7 +101,8 @@
     <div id="vysledky"></div>
 
     <h3>Načíst postupy ze souboru</h3>
-    <input type="file" id="nactiSouborPublic" accept="application/json" onchange="nactiPostupy(event)">
+    <label for="nactiSouborPublic" id="nactiLabel">Načíst aktuální postupy IOS</label>
+    <input type="file" id="nactiSouborPublic" accept="application/json" onchange="nactiPostupy(event, true)">
 
     <h3>Přihlášení pro administrátora</h3>
     <input type="password" id="heslo" placeholder="Zadejte heslo">
@@ -112,154 +136,93 @@
 
 <script>
   let postupy = JSON.parse(localStorage.getItem("postupy")) || [];
+  let verzeDat = localStorage.getItem("verzeDat") || "";
+
+  function aktualizujVerziZahlavi() {
+    const div = document.getElementById("verzeZahlavi");
+    div.textContent = verzeDat ? `Verze dat: ${verzeDat}` : "";
+  }
+
+  aktualizujVerziZahlavi();
 
   function ulozDoLocal() {
     localStorage.setItem("postupy", JSON.stringify(postupy));
+    localStorage.setItem("verzeDat", verzeDat);
+    aktualizujVerziZahlavi();
   }
 
   function ulozPostup() {
+    const nazev = document.getElementById("nazev").value.trim();
+    const klicova = document.getElementById("klicova").value.trim();
+    const text = document.getElementById("text").value.trim();
+    const odkaz = document.getElementById("odkaz").value.trim();
+    const web = document.getElementById("web").value.trim();
+    const vkladatel = document.getElementById("vkladatel").value.trim();
     const index = document.getElementById("editIndex").value;
-    const novy = {
-      nazev: document.getElementById("nazev").value,
-      klicova: document.getElementById("klicova").value,
-      text: document.getElementById("text").value,
-      odkaz: document.getElementById("odkaz").value,
-      web: document.getElementById("web").value,
-      vkladatel: document.getElementById("vkladatel").value,
-      datum: new Date().toLocaleDateString("cs-CZ")
+
+    if (!nazev || !klicova || !text || !vkladatel) {
+      alert("Vyplňte prosím všechna povinná pole.");
+      return;
+    }
+
+    const postup = {
+      nazev,
+      klicova,
+      text,
+      odkaz,
+      web,
+      vkladatel,
+      datum: new Date().toLocaleString("cs-CZ")
     };
 
     if (index === "") {
-      postupy.push(novy);
+      postupy.push(postup);
     } else {
-      postupy[parseInt(index)] = novy;
-      document.getElementById("editIndex").value = "";
+      postupy[parseInt(index)] = postup;
     }
+
+    document.getElementById("nazev").value = "";
+    document.getElementById("klicova").value = "";
+    document.getElementById("text").value = "";
+    document.getElementById("odkaz").value = "";
+    document.getElementById("web").value = "";
+    document.getElementById("vkladatel").value = "";
+    document.getElementById("editIndex").value = "";
+
     ulozDoLocal();
     zobrazSpravu();
-    document.querySelectorAll("input, textarea").forEach(el => el.value = "");
-  }
-
-  function zobrazSpravu() {
-    const s = document.getElementById("spravaPostupu");
-    s.innerHTML = "";
-    postupy.forEach((p, i) => {
-      s.innerHTML += `
-        <div class="postup">
-          <h3>${p.nazev}</h3>
-          <p><strong>Klíčová slova:</strong> ${p.klicova}</p>
-          <p>${p.text}</p>
-          ${p.odkaz ? `<p><a href="${p.odkaz}" target="_blank">Odkaz na dokument</a></p>` : ""}
-          ${p.web ? `<p><a href="${p.web}" target="_blank">Odkaz na webové stránky</a></p>` : ""}
-          <p><small>Vložil: ${p.vkladatel}, dne: ${p.datum}</small></p>
-          <button class="btn btn-small" onclick="editPostup(${i})">Upravit</button>
-          <button class="btn btn-small" onclick="smazPostup(${i})">Smazat</button>
-        </div>`;
-    });
-  }
-
-  function editPostup(i) {
-    const p = postupy[i];
-    document.getElementById("nazev").value = p.nazev;
-    document.getElementById("klicova").value = p.klicova;
-    document.getElementById("text").value = p.text;
-    document.getElementById("odkaz").value = p.odkaz;
-    document.getElementById("web").value = p.web;
-    document.getElementById("vkladatel").value = p.vkladatel;
-    document.getElementById("editIndex").value = i;
-  }
-
-  function smazPostup(i) {
-    if (confirm("Opravdu chcete tento postup smazat?")) {
-      postupy.splice(i, 1);
-      ulozDoLocal();
-      zobrazSpravu();
-    }
-  }
-
-  function searchPostupy() {
-    const klic = document.getElementById("hledat").value.toLowerCase();
-    const vysledky = document.getElementById("vysledky");
-    vysledky.innerHTML = "";
-    postupy.filter(p => p.klicova.toLowerCase().includes(klic)).forEach(p => {
-      vysledky.innerHTML += `
-        <div class="postup">
-          <h3>${p.nazev}</h3>
-          <p><strong>Klíčová slova:</strong> ${p.klicova}</p>
-          <p>${p.text}</p>
-          ${p.odkaz ? `<p><a href="${p.odkaz}" target="_blank">Odkaz na dokument</a></p>` : ""}
-          ${p.web ? `<p><a href="${p.web}" target="_blank">Odkaz na webové stránky</a></p>` : ""}
-          <p><small>Vložil: ${p.vkladatel}, dne: ${p.datum}</small></p>
-        </div>`;
-    });
-  }
-
-  function showAll() {
-    const vysledky = document.getElementById("vysledky");
-    vysledky.innerHTML = "";
-    postupy.forEach(p => {
-      vysledky.innerHTML += `
-        <div class="postup">
-          <h3>${p.nazev}</h3>
-          <p><strong>Klíčová slova:</strong> ${p.klicova}</p>
-          <p>${p.text}</p>
-          ${p.odkaz ? `<p><a href="${p.odkaz}" target="_blank">Odkaz na dokument</a></p>` : ""}
-          ${p.web ? `<p><a href="${p.web}" target="_blank">Odkaz na webové stránky</a></p>` : ""}
-          <p><small>Vložil: ${p.vkladatel}, dne: ${p.datum}</small></p>
-        </div>`;
-    });
-  }
-
-  function vycistitVyhledavani() {
-    document.getElementById("hledat").value = "";
-    document.getElementById("vysledky").innerHTML = "";
-  }
-
-  function zpetNaVyhledavani() {
-    document.getElementById("adminSekce").classList.add("hidden");
-    document.getElementById("vyhledavaniSekce").classList.remove("hidden");
-  }
-
-  function overHeslo() {
-    const heslo = document.getElementById("heslo").value;
-    if (heslo === "PostupyIOS2025") {
-      document.getElementById("vyhledavaniSekce").classList.add("hidden");
-      document.getElementById("adminSekce").classList.remove("hidden");
-      zobrazSpravu();
-    } else {
-      alert("Nesprávné heslo.");
-    }
-  }
-
-  function odhlasAdmina() {
-    if (confirm("Opravdu se chcete odhlásit z administrace?")) {
-      document.getElementById("adminSekce").classList.add("hidden");
-      document.getElementById("vyhledavaniSekce").classList.remove("hidden");
-      document.getElementById("heslo").value = "";
-    }
   }
 
   function exportujPostupy() {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(postupy, null, 2));
+    const datumExportu = new Date().toLocaleString("cs-CZ");
+    const vystup = {
+      verze: datumExportu,
+      data: postupy
+    };
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(vystup, null, 2));
     const a = document.createElement('a');
     a.href = dataStr;
     a.download = 'postupyIOS.json';
     a.click();
   }
 
-  function nactiPostupy(event) {
+  function nactiPostupy(event, jeVerejne = false) {
     const soubor = event.target.files[0];
     if (!soubor) return;
     const reader = new FileReader();
     reader.onload = function(e) {
       try {
-        const data = JSON.parse(e.target.result);
-        if (Array.isArray(data)) {
-          postupy = data;
+        const obsah = JSON.parse(e.target.result);
+        if (obsah.data && Array.isArray(obsah.data)) {
+          postupy = obsah.data;
+          verzeDat = obsah.verze || "";
           ulozDoLocal();
           zobrazSpravu();
           searchPostupy();
-          alert("Postupy byly úspěšně načteny ze souboru.");
+          if (jeVerejne) {
+            document.getElementById("nactiLabel").classList.add("nacteno");
+          }
+          alert("Postupy byly úspěšně načteny.\nVerze dat: " + verzeDat);
         } else {
           alert("Soubor nemá správný formát.");
         }
@@ -269,6 +232,22 @@
     };
     reader.readAsText(soubor);
   }
+
+  function overHeslo() {
+    const heslo = document.getElementById("heslo").value;
+    if (heslo === "PostupyIOS2025") {
+      document.getElementById("vyhledavaniSekce").classList.add("hidden");
+      document.getElementById("adminSekce").classList.remove("hidden");
+    } else {
+      alert("Nesprávné heslo.");
+    }
+  }
+
+  function zpetNaVyhledavani() {
+    document.getElementById("adminSekce").classList.add("hidden");
+    document.getElementById("vyhledavaniSekce").classList.remove("hidden");
+  }
 </script>
 </body>
 </html>
+
