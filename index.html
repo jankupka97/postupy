@@ -1,1 +1,192 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pracovní postupy IOS</title>
+  <style>
+    :root {
+      --primary: #005baa;
+      --primary-light: #e6f0fa;
+      --white: #ffffff;
+      --gray: #f5f5f5;
+      --text-dark: #1a1a1a;
+      --text-light: #555;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--gray);
+      color: var(--text-dark);
+    }
+
+    header, footer {
+      background-color: var(--primary);
+      color: var(--white);
+      text-align: center;
+      padding: 1.5rem 1rem;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    h1, h2, h3 {
+      margin-bottom: 1rem;
+    }
+
+    input, textarea, button, select {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .postup {
+      border: 1px solid #ddd;
+      padding: 1rem;
+      margin-top: 1rem;
+      border-radius: 6px;
+      background: #f9f9f9;
+    }
+
+    .btn {
+      background-color: var(--primary);
+      color: var(--white);
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: background 0.2s ease-in-out;
+    }
+
+    .btn:hover {
+      background-color: #004080;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--primary-light);
+    }
+
+    .btn-small {
+      width: auto;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    footer {
+      margin-top: 3rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Pracovní postupy IOS</h1>
+    <p>Operační odbor Krajského ředitelství policie Plzeňského kraje – Interní databáze</p>
+  </header>
+
+  <div class="container">
+    <input type="text" id="search" placeholder="Vyhledej podle klíčového slova" />
+    <button onclick="searchPostupy()" class="btn">Vyhledat</button>
+    <button onclick="clearSearch()" class="btn-outline">Vyčistit vyhledávání</button>
+    <button onclick="showAll()" class="btn-outline">Zobrazit všechny postupy</button>
+
+    <div id="vysledky"></div>
+
+    <button onclick="toggleForm()" class="btn" style="margin-top: 2rem">Přidej nový postup</button>
+
+    <div id="formular" class="hidden">
+      <h2>Přidat nový pracovní postup</h2>
+      <input type="text" id="nazev" placeholder="Název postupu" />
+      <input type="text" id="klicova" placeholder="Klíčová slova" />
+      <textarea id="text" placeholder="Text pracovního postupu"></textarea>
+      <input type="text" id="odkaz" placeholder="Externí odkaz" />
+      <input type="text" id="vkladatel" placeholder="Jméno vkladatele" />
+      <input type="file" id="soubor" accept=".pdf,.doc,.docx,.xls,.xlsx" />
+      <button onclick="ulozPostup()" class="btn">Uložit postup</button>
+      <button onclick="toggleForm()" class="btn-outline">Zpět na základní obrazovku</button>
+
+      <h3>Správa uložených postupů</h3>
+      <div id="spravaPostupu"></div>
+    </div>
+  </div>
+
+  <footer>
+    Aplikaci vytvořil plk. Mgr. Jan Kupka ve spolupráci s AI – ChatGPT
+  </footer>
+
+  <script>
+    const postupy = [];
+
+    function toggleForm() {
+      const form = document.getElementById('formular');
+      form.classList.toggle('hidden');
+    }
+
+    function ulozPostup() {
+      const nazev = document.getElementById("nazev").value;
+      const klicova = document.getElementById("klicova").value;
+      const text = document.getElementById("text").value;
+      const odkaz = document.getElementById("odkaz").value;
+      const vkladatel = document.getElementById("vkladatel").value;
+      const soubor = document.getElementById("soubor").files[0]?.name || "";
+
+      const datum = new Date().toLocaleDateString("cs-CZ");
+
+      const novyPostup = { nazev, klicova, text, odkaz, vkladatel, soubor, datum };
+      postupy.push(novyPostup);
+
+      zobrazSpravu();
+      document.querySelectorAll("#formular input, #formular textarea").forEach(el => el.value = "");
+    }
+
+    function zobrazSpravu() {
+      const sprava = document.getElementById("spravaPostupu");
+      sprava.innerHTML = "";
+      postupy.forEach((p, index) => {
+        sprava.innerHTML += `
+          <div class="postup">
+            <h3>${p.nazev}</h3>
+            <p><strong>Klíčová slova:</strong> ${p.klicova}</p>
+            <p>${p.text}</p>
+            ${p.odkaz ? `<p><a href="${p.odkaz}" target="_blank">Externí odkaz</a></p>` : ""}
+            ${p.soubor ? `<p><strong>Soubor:</strong> ${p.soubor}</p>` : ""}
+            <p><small>Vložil: ${p.vkladatel}, dne: ${p.datum}</small></p>
+          </div>
+        `;
+      });
+    }
+  </script>
+</body>
+</html>
 
