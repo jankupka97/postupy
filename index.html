@@ -60,6 +60,9 @@
     .hidden {
       display: none;
     }
+    .right-align {
+      text-align: right;
+    }
   </style>
 </head>
 <body>
@@ -74,20 +77,29 @@
     <button class="btn" onclick="vycistitVyhledavani()">Vyčistit vyhledávání</button>
     <div id="vysledky"></div>
 
+    <h3>Načíst postupy ze souboru</h3>
+    <input type="file" id="nactiSouborPublic" accept="application/json" onchange="nactiPostupy(event)">
+
     <h3>Přihlášení pro administrátora</h3>
     <input type="password" id="heslo" placeholder="Zadejte heslo">
     <button class="btn" onclick="overHeslo()">Přihlásit se</button>
   </div>
 
   <div class="container hidden" id="adminSekce">
+    <div class="right-align">
+      <button class="btn btn-small" onclick="odhlasAdmina()">Odhlásit se</button>
+    </div>
     <h2>Správa pracovních postupů</h2>
     <input type="text" id="nazev" placeholder="Název postupu">
     <input type="text" id="klicova" placeholder="Klíčová slova">
     <textarea id="text" placeholder="Text postupu"></textarea>
-    <input type="text" id="odkaz" placeholder="Externí odkaz (např. na dokument v cloudu)">
+    <input type="text" id="odkaz" placeholder="Odkaz na dokument v cloudu">
+    <input type="text" id="web" placeholder="Odkaz na webové stránky">
     <input type="text" id="vkladatel" placeholder="Jméno vkladatele">
     <input type="hidden" id="editIndex">
     <button class="btn" onclick="ulozPostup()">Uložit</button>
+    <button class="btn" onclick="exportujPostupy()">Uložit vše do souboru</button>
+    <input type="file" id="nactiSoubor" accept="application/json" onchange="nactiPostupy(event)">
 
     <h3>Seznam uložených postupů</h3>
     <div id="spravaPostupu"></div>
@@ -112,6 +124,7 @@
       klicova: document.getElementById("klicova").value,
       text: document.getElementById("text").value,
       odkaz: document.getElementById("odkaz").value,
+      web: document.getElementById("web").value,
       vkladatel: document.getElementById("vkladatel").value,
       datum: new Date().toLocaleDateString("cs-CZ")
     };
@@ -137,6 +150,7 @@
           <p><strong>Klíčová slova:</strong> ${p.klicova}</p>
           <p>${p.text}</p>
           ${p.odkaz ? `<p><a href="${p.odkaz}" target="_blank">Odkaz na dokument</a></p>` : ""}
+          ${p.web ? `<p><a href="${p.web}" target="_blank">Odkaz na webové stránky</a></p>` : ""}
           <p><small>Vložil: ${p.vkladatel}, dne: ${p.datum}</small></p>
           <button class="btn btn-small" onclick="editPostup(${i})">Upravit</button>
           <button class="btn btn-small" onclick="smazPostup(${i})">Smazat</button>
@@ -150,6 +164,7 @@
     document.getElementById("klicova").value = p.klicova;
     document.getElementById("text").value = p.text;
     document.getElementById("odkaz").value = p.odkaz;
+    document.getElementById("web").value = p.web;
     document.getElementById("vkladatel").value = p.vkladatel;
     document.getElementById("editIndex").value = i;
   }
@@ -173,6 +188,7 @@
           <p><strong>Klíčová slova:</strong> ${p.klicova}</p>
           <p>${p.text}</p>
           ${p.odkaz ? `<p><a href="${p.odkaz}" target="_blank">Odkaz na dokument</a></p>` : ""}
+          ${p.web ? `<p><a href="${p.web}" target="_blank">Odkaz na webové stránky</a></p>` : ""}
           <p><small>Vložil: ${p.vkladatel}, dne: ${p.datum}</small></p>
         </div>`;
     });
@@ -188,6 +204,7 @@
           <p><strong>Klíčová slova:</strong> ${p.klicova}</p>
           <p>${p.text}</p>
           ${p.odkaz ? `<p><a href="${p.odkaz}" target="_blank">Odkaz na dokument</a></p>` : ""}
+          ${p.web ? `<p><a href="${p.web}" target="_blank">Odkaz na webové stránky</a></p>` : ""}
           <p><small>Vložil: ${p.vkladatel}, dne: ${p.datum}</small></p>
         </div>`;
     });
@@ -213,7 +230,45 @@
       alert("Nesprávné heslo.");
     }
   }
+
+  function odhlasAdmina() {
+    if (confirm("Opravdu se chcete odhlásit z administrace?")) {
+      document.getElementById("adminSekce").classList.add("hidden");
+      document.getElementById("vyhledavaniSekce").classList.remove("hidden");
+      document.getElementById("heslo").value = "";
+    }
+  }
+
+  function exportujPostupy() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(postupy, null, 2));
+    const a = document.createElement('a');
+    a.href = dataStr;
+    a.download = 'postupyIOS.json';
+    a.click();
+  }
+
+  function nactiPostupy(event) {
+    const soubor = event.target.files[0];
+    if (!soubor) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (Array.isArray(data)) {
+          postupy = data;
+          ulozDoLocal();
+          zobrazSpravu();
+          searchPostupy();
+          alert("Postupy byly úspěšně načteny ze souboru.");
+        } else {
+          alert("Soubor nemá správný formát.");
+        }
+      } catch (err) {
+        alert("Chyba při načítání souboru.");
+      }
+    };
+    reader.readAsText(soubor);
+  }
 </script>
 </body>
 </html>
-
