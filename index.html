@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Postupy IOS</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Postupy IOS – Vyhledávání</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: Arial, sans-serif;
       background: #f5f5f5;
       color: #1a1a1a;
       margin: 0;
       padding: 0;
     }
-    header, footer {
+    header {
       background: #005baa;
       color: white;
-      text-align: center;
       padding: 1rem;
+      text-align: center;
     }
     .container {
       max-width: 800px;
@@ -24,65 +24,51 @@
       background: white;
       padding: 2rem;
       border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    input, textarea, button {
+    input, button, textarea {
       width: 100%;
       padding: 0.75rem;
       margin: 0.5rem 0;
       font-size: 1rem;
-      border-radius: 5px;
       border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
     }
     .btn {
       background: #005baa;
       color: white;
       border: none;
-      font-weight: bold;
       cursor: pointer;
-      transition: 0.2s;
     }
     .btn:hover {
       background: #004080;
     }
-    .btn-small {
-      padding: 0.4rem 0.8rem;
-      width: auto;
-      margin-right: 0.5rem;
-    }
     .postup {
-      background: #f9f9f9;
+      background: #eef4fb;
       padding: 1rem;
-      margin-top: 1rem;
-      border-radius: 6px;
-      border: 1px solid #ddd;
+      margin: 1rem 0;
+      border-left: 5px solid #005baa;
     }
-    .hidden {
-      display: none;
-    }
-    .right-align {
-      text-align: right;
-    }
-    #nactiSouborPublic {
+    #nactiSoubor {
       display: none;
     }
     #nactiLabel {
       display: inline-block;
-      padding: 0.75rem;
       width: 100%;
       text-align: center;
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
-      background-color: #c0392b;
+      padding: 0.75rem;
+      background: #c0392b;
       color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      box-sizing: border-box;
     }
     #nactiLabel.nacteno {
-      background-color: #27ae60;
+      background: #27ae60;
     }
-    #verzeZahlavi {
-      font-size: 0.9rem;
-      margin-top: 0.2rem;
+    .hidden {
+      display: none;
     }
   </style>
 </head>
@@ -93,161 +79,166 @@
     <div id="verzeZahlavi"></div>
   </header>
 
-  <div class="container" id="vyhledavaniSekce">
-    <h2>Vyhledávání postupů</h2>
+  <div class="container" id="userSection">
+    <h2>Vyhledávání pracovních postupů</h2>
     <input type="text" id="hledat" placeholder="Zadejte klíčová slova" oninput="searchPostupy()">
     <button class="btn" onclick="showAll()">Zobrazit všechny postupy</button>
     <button class="btn" onclick="vycistitVyhledavani()">Vyčistit vyhledávání</button>
+
+    <h3>Načíst aktuální postupy IOS</h3>
+    <label for="nactiSoubor" id="nactiLabel">Načíst aktuální postupy IOS</label>
+    <input type="file" id="nactiSoubor" accept="application/json" onchange="nactiPostupy(event)">
+
     <div id="vysledky"></div>
 
-    <h3>Načíst postupy ze souboru</h3>
-    <label for="nactiSouborPublic" id="nactiLabel">Načíst aktuální postupy IOS</label>
-    <input type="file" id="nactiSouborPublic" accept="application/json" onchange="nactiPostupy(event, true)">
-
-    <h3>Přihlášení pro administrátora</h3>
+    <h3>Přihlášení administrátora</h3>
     <input type="password" id="heslo" placeholder="Zadejte heslo">
     <button class="btn" onclick="overHeslo()">Přihlásit se</button>
   </div>
 
-  <div class="container hidden" id="adminSekce">
-    <div class="right-align">
-      <button class="btn btn-small" onclick="odhlasAdmina()">Odhlásit se</button>
-    </div>
-    <h2>Správa pracovních postupů</h2>
+  <div class="container hidden" id="adminSection">
+    <h2>Vítej v administraci</h2>
+
+    <h3>Přidat nebo upravit postup</h3>
     <input type="text" id="nazev" placeholder="Název postupu">
     <input type="text" id="klicova" placeholder="Klíčová slova">
     <textarea id="text" placeholder="Text postupu"></textarea>
-    <input type="text" id="odkaz" placeholder="Odkaz na dokument v cloudu">
-    <input type="text" id="web" placeholder="Odkaz na webové stránky">
+    <input type="text" id="odkaz" placeholder="Odkaz na dokument">
+    <input type="text" id="web" placeholder="Odkaz na web">
     <input type="text" id="vkladatel" placeholder="Jméno vkladatele">
     <input type="hidden" id="editIndex">
-    <button class="btn" onclick="ulozPostup()">Uložit</button>
-    <button class="btn" onclick="exportujPostupy()">Uložit vše do souboru</button>
-    <input type="file" id="nactiSoubor" accept="application/json" onchange="nactiPostupy(event)">
+    <button class="btn" onclick="ulozPostup()">Uložit postup</button>
 
     <h3>Seznam uložených postupů</h3>
-    <div id="spravaPostupu"></div>
-    <button class="btn" onclick="zpetNaVyhledavani()">Zpět na vyhledávání</button>
+    <div id="seznamPostupu"></div>
+
+    <br>
+    <button class="btn" onclick="odhlasAdmina()">Odhlásit se</button>
+    <button class="btn" onclick="zpetNaVyhledavani()">Zpět na hlavní stránku</button>
   </div>
 
-  <footer>
-    Aplikaci vytvořil plk. Mgr. Jan Kupka ve spolupráci s AI – ChatGPT
-  </footer>
+  <script>
+    let postupy = [];
 
-<script>
-  let postupy = JSON.parse(localStorage.getItem("postupy")) || [];
-  let verzeDat = localStorage.getItem("verzeDat") || "";
-
-  function aktualizujVerziZahlavi() {
-    const div = document.getElementById("verzeZahlavi");
-    div.textContent = verzeDat ? `Verze dat: ${verzeDat}` : "";
-  }
-
-  aktualizujVerziZahlavi();
-
-  function ulozDoLocal() {
-    localStorage.setItem("postupy", JSON.stringify(postupy));
-    localStorage.setItem("verzeDat", verzeDat);
-    aktualizujVerziZahlavi();
-  }
-
-  function ulozPostup() {
-    const nazev = document.getElementById("nazev").value.trim();
-    const klicova = document.getElementById("klicova").value.trim();
-    const text = document.getElementById("text").value.trim();
-    const odkaz = document.getElementById("odkaz").value.trim();
-    const web = document.getElementById("web").value.trim();
-    const vkladatel = document.getElementById("vkladatel").value.trim();
-    const index = document.getElementById("editIndex").value;
-
-    if (!nazev || !klicova || !text || !vkladatel) {
-      alert("Vyplňte prosím všechna povinná pole.");
-      return;
+    function searchPostupy() {
+      const hledat = document.getElementById("hledat").value.toLowerCase();
+      const vysledky = document.getElementById("vysledky");
+      vysledky.innerHTML = "";
+      postupy.filter(p => p.klicova.toLowerCase().includes(hledat)).forEach(p => {
+        const div = document.createElement("div");
+        div.className = "postup";
+        div.innerHTML = `<strong>${p.nazev}</strong><br>${p.text}<br>Vkladatel: ${p.vkladatel}<br>Vloženo: ${p.datum}<br><a href="${p.odkaz}" target="_blank">Dokument</a><br><a href="${p.web}" target="_blank">Web</a>`;
+        vysledky.appendChild(div);
+      });
     }
 
-    const postup = {
-      nazev,
-      klicova,
-      text,
-      odkaz,
-      web,
-      vkladatel,
-      datum: new Date().toLocaleString("cs-CZ")
-    };
-
-    if (index === "") {
-      postupy.push(postup);
-    } else {
-      postupy[parseInt(index)] = postup;
+    function showAll() {
+      document.getElementById("hledat").value = "";
+      searchPostupy();
     }
 
-    document.getElementById("nazev").value = "";
-    document.getElementById("klicova").value = "";
-    document.getElementById("text").value = "";
-    document.getElementById("odkaz").value = "";
-    document.getElementById("web").value = "";
-    document.getElementById("vkladatel").value = "";
-    document.getElementById("editIndex").value = "";
+    function vycistitVyhledavani() {
+      document.getElementById("hledat").value = "";
+      document.getElementById("vysledky").innerHTML = "";
+    }
 
-    ulozDoLocal();
-    zobrazSpravu();
-  }
-
-  function exportujPostupy() {
-    const datumExportu = new Date().toLocaleString("cs-CZ");
-    const vystup = {
-      verze: datumExportu,
-      data: postupy
-    };
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(vystup, null, 2));
-    const a = document.createElement('a');
-    a.href = dataStr;
-    a.download = 'postupyIOS.json';
-    a.click();
-  }
-
-  function nactiPostupy(event, jeVerejne = false) {
-    const soubor = event.target.files[0];
-    if (!soubor) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      try {
-        const obsah = JSON.parse(e.target.result);
-        if (obsah.data && Array.isArray(obsah.data)) {
-          postupy = obsah.data;
-          verzeDat = obsah.verze || "";
-          ulozDoLocal();
-          zobrazSpravu();
-          searchPostupy();
-          if (jeVerejne) {
-            document.getElementById("nactiLabel").classList.add("nacteno");
-          }
-          alert("Postupy byly úspěšně načteny.\nVerze dat: " + verzeDat);
-        } else {
-          alert("Soubor nemá správný formát.");
-        }
-      } catch (err) {
-        alert("Chyba při načítání souboru.");
+    function overHeslo() {
+      const heslo = document.getElementById("heslo").value;
+      if (heslo === "PostupyIOS2025") {
+        document.getElementById("userSection").classList.add("hidden");
+        document.getElementById("adminSection").classList.remove("hidden");
+        zobrazPostupy();
+      } else {
+        alert("Nesprávné heslo.");
       }
-    };
-    reader.readAsText(soubor);
-  }
-
-  function overHeslo() {
-    const heslo = document.getElementById("heslo").value;
-    if (heslo === "PostupyIOS2025") {
-      document.getElementById("vyhledavaniSekce").classList.add("hidden");
-      document.getElementById("adminSekce").classList.remove("hidden");
-    } else {
-      alert("Nesprávné heslo.");
     }
-  }
 
-  function zpetNaVyhledavani() {
-    document.getElementById("adminSekce").classList.add("hidden");
-    document.getElementById("vyhledavaniSekce").classList.remove("hidden");
-  }
-</script>
+    function odhlasAdmina() {
+      document.getElementById("adminSection").classList.add("hidden");
+      document.getElementById("userSection").classList.remove("hidden");
+      document.getElementById("heslo").value = "";
+    }
+
+    function zpetNaVyhledavani() {
+      odhlasAdmina();
+    }
+
+    function ulozPostup() {
+      const nazev = document.getElementById("nazev").value;
+      const klicova = document.getElementById("klicova").value;
+      const text = document.getElementById("text").value;
+      const odkaz = document.getElementById("odkaz").value;
+      const web = document.getElementById("web").value;
+      const vkladatel = document.getElementById("vkladatel").value;
+      const editIndex = document.getElementById("editIndex").value;
+      const datum = new Date().toLocaleString();
+      const novy = { nazev, klicova, text, odkaz, web, vkladatel, datum };
+
+      if (editIndex === "") {
+        postupy.push(novy);
+      } else {
+        postupy[editIndex] = novy;
+        document.getElementById("editIndex").value = "";
+      }
+
+      zobrazPostupy();
+
+      document.getElementById("nazev").value = "";
+      document.getElementById("klicova").value = "";
+      document.getElementById("text").value = "";
+      document.getElementById("odkaz").value = "";
+      document.getElementById("web").value = "";
+      document.getElementById("vkladatel").value = "";
+    }
+
+    function zobrazPostupy() {
+      const seznam = document.getElementById("seznamPostupu");
+      seznam.innerHTML = "";
+      postupy.forEach((p, i) => {
+        const div = document.createElement("div");
+        div.className = "postup";
+        div.innerHTML = `<strong>${p.nazev}</strong><br>${p.klicova}<br><button onclick="editujPostup(${i})">Upravit</button> <button onclick="smazPostup(${i})">Smazat</button>`;
+        seznam.appendChild(div);
+      });
+    }
+
+    function editujPostup(i) {
+      const p = postupy[i];
+      document.getElementById("nazev").value = p.nazev;
+      document.getElementById("klicova").value = p.klicova;
+      document.getElementById("text").value = p.text;
+      document.getElementById("odkaz").value = p.odkaz;
+      document.getElementById("web").value = p.web;
+      document.getElementById("vkladatel").value = p.vkladatel;
+      document.getElementById("editIndex").value = i;
+    }
+
+    function smazPostup(i) {
+      if (confirm("Opravdu chcete smazat tento postup?")) {
+        postupy.splice(i, 1);
+        zobrazPostupy();
+        searchPostupy();
+      }
+    }
+
+    function nactiPostupy(event) {
+      const soubor = event.target.files[0];
+      if (!soubor) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          postupy = JSON.parse(e.target.result);
+          zobrazPostupy();
+          searchPostupy();
+          document.getElementById("nactiLabel").classList.add("nacteno");
+          document.getElementById("verzeZahlavi").textContent = `Načteno: ${new Date().toLocaleString()}`;
+        } catch (err) {
+          alert("Chyba při načítání souboru.");
+        }
+      };
+      reader.readAsText(soubor);
+    }
+  </script>
 </body>
 </html>
 
