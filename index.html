@@ -1,244 +1,59 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html dir="ltr" lang="cs-CZ" class="theme light classic">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Postupy IOS – Vyhledávání</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      color: #1a1a1a;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: #005baa;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-    }
-    .container {
-      max-width: 800px;
-      margin: 2rem auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    input, button, textarea {
-      width: 100%;
-      padding: 0.75rem;
-      margin: 0.5rem 0;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    .btn {
-      background: #005baa;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    .btn:hover {
-      background: #004080;
-    }
-    .postup {
-      background: #eef4fb;
-      padding: 1rem;
-      margin: 1rem 0;
-      border-left: 5px solid #005baa;
-    }
-    #nactiSoubor {
-      display: none;
-    }
-    #nactiLabel {
-      display: inline-block;
-      width: 100%;
-      text-align: center;
-      padding: 0.75rem;
-      background: #c0392b;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-      box-sizing: border-box;
-    }
-    #nactiLabel.nacteno {
-      background: #27ae60;
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
+    <base href="/pp14/">
+    <meta charset="utf-8">
+    <title>PP14</title>
+    <meta name="app-name" content="export_website"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="_assets/a0684b0780c739e9.vendor.ltr.css" rel="stylesheet" integrity="sha512-JwMCpiHdk95MoUTatfaZJwstzeDnWfvWMJiwnSxZfPmgeCe4yvQDQ+ONMQjIy/Ht72r0TmlE+gvZnYRnpdLdVg==" crossorigin="anonymous">
+    <link href="_assets/e34d87168d93f8a2.ltr.css" rel="stylesheet" integrity="sha512-bMmkvpuexd2uf6YIlr0OTNDvttjf0CUVMGlZjusvBu+ZliBrs1vGoK4LGR86J3BJ0xmfVIyUsog7fmgDA+PUUQ==" crossorigin="anonymous">
+    <link href="_assets/static_font_4.ltr.css" rel="stylesheet">
+    <link href="_assets/df50ca757589282b.runtime.js" rel="preload" as="script" crossorigin="anonymous" integrity="sha512-OuiJ0Pn0n9sKr9PFkgJFQvy/WSTYkTFgZXT4rHeVu8nxSo1yF1lCvFUZGQKFKywsKp9LoYcaPm8SAc3tU1MOzw==" nonce="950f4cdb-acee-4b78-8e4a-8da80aee5b93">
+    <link href="_assets/c1fefd034e402325.s4le6a.vendor.js" rel="preload" as="script" crossorigin="anonymous" integrity="sha512-U+LQ8Bw6PvtLBFgDSzzdZi67JkLOUVgu9nd0ZpSBpwDrgGUSiAsjhgXw/IfeFob9DNTUes44958WV5jECtA1QA==" nonce="950f4cdb-acee-4b78-8e4a-8da80aee5b93">
+    <link href="_assets/f90d92d25d1cd0e3.vendor.js" rel="preload" as="script" crossorigin="anonymous" integrity="sha512-M6jk9jbryq7jIVzbpU8D6Xcjfy+cbuTjsd7w+y2vNHWyKDfRLv47TAc015AIC6WzKoZYT8d/jcFyAshhEE7RAg==" nonce="950f4cdb-acee-4b78-8e4a-8da80aee5b93">
+    <link href="_assets/6502a21dc1680919.strings.js" rel="preload" as="script" crossorigin="anonymous" integrity="sha512-Js7XSwtzbopohZ3q6ZU5bWULv1xLGKam0AAQ30ss79PgDlxKWp376Ch6NpL+YOCFXxZJjr0NasPuBWK9janRHA==" nonce="950f4cdb-acee-4b78-8e4a-8da80aee5b93">
+    <link href="_assets/6d4ab3a709e09d8e.cs-CZ.js" rel="preload" as="script" crossorigin="anonymous" integrity="sha512-BXCGbnX3XgiRZwxLlhFMpjEoSNlIQLRRFZFdQd/WL2SjWCBPkKy4uvRitToKBp5AtuKsk9+73QRj4uAMdqHwbA==" nonce="950f4cdb-acee-4b78-8e4a-8da80aee5b93">
+    <link href="_assets/46bf0e9b088e123d.js" rel="preload" as="script" crossorigin="anonymous" integrity="sha512-ilShzIddPy09cLWWgKMvKh256cg3wvYBHk0nJlajmZibJ18OOwAsljdWVn0ngX368JPm4rOBG3oVPP3KQlGv3w==" nonce="950f4cdb-acee-4b78-8e4a-8da80aee5b93">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta property="og:title" content="PP14">
+    <meta property="og:type" content="website">
+    <link rel="shortcut icon" href="_assets/images/2d0b56e7e51cf11036ad8734bdb67e2d.png">
+    <link rel="icon" href="_assets/images/e53c4bd8da5e491d9ab09e7cf0daf874.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="_assets/images/725b756a69a7d4c235070e51acd85560.png" sizes="180x180">
+    <script nonce="950f4cdb-acee-4b78-8e4a-8da80aee5b93">
+    document.addEventListener('contextmenu', (e) => {
+        const isMedia = ['img', 'image', 'video', 'svg', 'picture'].some(
+        tagName => tagName.localeCompare(e.target.tagName, undefined, {
+            sensitivity: 'base'
+        }) === 0,
+        );
+        isMedia && e.preventDefault();
+    });
+    </script>
 </head>
 <body>
-  <header>
-    <h1>Postupy IOS</h1>
-    <div>Operační odbor Krajského ředitelství policie Plzeňského kraje</div>
-    <div id="verzeZahlavi"></div>
-  </header>
-
-  <div class="container" id="userSection">
-    <h2>Vyhledávání pracovních postupů</h2>
-    <input type="text" id="hledat" placeholder="Zadejte klíčová slova" oninput="searchPostupy()">
-    <button class="btn" onclick="showAll()">Zobrazit všechny postupy</button>
-    <button class="btn" onclick="vycistitVyhledavani()">Vyčistit vyhledávání</button>
-
-    <h3>Načíst aktuální postupy IOS</h3>
-    <label for="nactiSoubor" id="nactiLabel">Načíst aktuální postupy IOS</label>
-    <input type="file" id="nactiSoubor" accept="application/json" onchange="nactiPostupy(event)">
-
-    <div id="vysledky"></div>
-
-    <h3>Přihlášení administrátora</h3>
-    <input type="password" id="heslo" placeholder="Zadejte heslo">
-    <button class="btn" onclick="overHeslo()">Přihlásit se</button>
-  </div>
-
-  <div class="container hidden" id="adminSection">
-    <h2>Vítej v administraci</h2>
-
-    <h3>Přidat nebo upravit postup</h3>
-    <input type="text" id="nazev" placeholder="Název postupu">
-    <input type="text" id="klicova" placeholder="Klíčová slova">
-    <textarea id="text" placeholder="Text postupu"></textarea>
-    <input type="text" id="odkaz" placeholder="Odkaz na dokument">
-    <input type="text" id="web" placeholder="Odkaz na web">
-    <input type="text" id="vkladatel" placeholder="Jméno vkladatele">
-    <input type="hidden" id="editIndex">
-    <button class="btn" onclick="ulozPostup()">Uložit postup</button>
-
-    <h3>Seznam uložených postupů</h3>
-    <div id="seznamPostupu"></div>
-
-    <br>
-    <button class="btn" onclick="odhlasAdmina()">Odhlásit se</button>
-    <button class="btn" onclick="zpetNaVyhledavani()">Zpět na hlavní stránku</button>
-  </div>
-
-  <script>
-    let postupy = [];
-
-    function searchPostupy() {
-      const hledat = document.getElementById("hledat").value.toLowerCase();
-      const vysledky = document.getElementById("vysledky");
-      vysledky.innerHTML = "";
-      postupy.filter(p => p.klicova.toLowerCase().includes(hledat)).forEach(p => {
-        const div = document.createElement("div");
-        div.className = "postup";
-        div.innerHTML = `<strong>${p.nazev}</strong><br>${p.text}<br>Vkladatel: ${p.vkladatel}<br>Vloženo: ${p.datum}<br><a href="${p.odkaz}" target="_blank">Dokument</a><br><a href="${p.web}" target="_blank">Web</a>`;
-        vysledky.appendChild(div);
-      });
-    }
-
-    function showAll() {
-      document.getElementById("hledat").value = "";
-      searchPostupy();
-    }
-
-    function vycistitVyhledavani() {
-      document.getElementById("hledat").value = "";
-      document.getElementById("vysledky").innerHTML = "";
-    }
-
-    function overHeslo() {
-      const heslo = document.getElementById("heslo").value;
-      if (heslo === "PostupyIOS2025") {
-        document.getElementById("userSection").classList.add("hidden");
-        document.getElementById("adminSection").classList.remove("hidden");
-        zobrazPostupy();
-      } else {
-        alert("Nesprávné heslo.");
-      }
-    }
-
-    function odhlasAdmina() {
-      document.getElementById("adminSection").classList.add("hidden");
-      document.getElementById("userSection").classList.remove("hidden");
-      document.getElementById("heslo").value = "";
-    }
-
-    function zpetNaVyhledavani() {
-      odhlasAdmina();
-    }
-
-    function ulozPostup() {
-      const nazev = document.getElementById("nazev").value;
-      const klicova = document.getElementById("klicova").value;
-      const text = document.getElementById("text").value;
-      const odkaz = document.getElementById("odkaz").value;
-      const web = document.getElementById("web").value;
-      const vkladatel = document.getElementById("vkladatel").value;
-      const editIndex = document.getElementById("editIndex").value;
-      const datum = new Date().toLocaleString();
-      const novy = { nazev, klicova, text, odkaz, web, vkladatel, datum };
-
-      if (editIndex === "") {
-        postupy.push(novy);
-      } else {
-        postupy[editIndex] = novy;
-        document.getElementById("editIndex").value = "";
-      }
-
-      zobrazPostupy();
-
-      document.getElementById("nazev").value = "";
-      document.getElementById("klicova").value = "";
-      document.getElementById("text").value = "";
-      document.getElementById("odkaz").value = "";
-      document.getElementById("web").value = "";
-      document.getElementById("vkladatel").value = "";
-    }
-
-    function zobrazPostupy() {
-      const seznam = document.getElementById("seznamPostupu");
-      seznam.innerHTML = "";
-      postupy.forEach((p, i) => {
-        const div = document.createElement("div");
-        div.className = "postup";
-        div.innerHTML = `<strong>${p.nazev}</strong><br>${p.klicova}<br><button onclick="editujPostup(${i})">Upravit</button> <button onclick="smazPostup(${i})">Smazat</button>`;
-        seznam.appendChild(div);
-      });
-    }
-
-    function editujPostup(i) {
-      const p = postupy[i];
-      document.getElementById("nazev").value = p.nazev;
-      document.getElementById("klicova").value = p.klicova;
-      document.getElementById("text").value = p.text;
-      document.getElementById("odkaz").value = p.odkaz;
-      document.getElementById("web").value = p.web;
-      document.getElementById("vkladatel").value = p.vkladatel;
-      document.getElementById("editIndex").value = i;
-    }
-
-    function smazPostup(i) {
-      if (confirm("Opravdu chcete smazat tento postup?")) {
-        postupy.splice(i, 1);
-        zobrazPostupy();
-        searchPostupy();
-      }
-    }
-
-    function nactiPostupy(event) {
-      const soubor = event.target.files[0];
-      if (!soubor) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          postupy = JSON.parse(e.target.result);
-          zobrazPostupy();
-          searchPostupy();
-          document.getElementById("nactiLabel").classList.add("nacteno");
-          document.getElementById("verzeZahlavi").textContent = `Načteno: ${new Date().toLocaleString()}`;
-        } catch (err) {
-          alert("Chyba při načítání souboru.");
-        }
-      };
-      reader.readAsText(soubor);
-    }
-  </script>
+    <script nonce="950f4cdb-acee-4b78-8e4a-8da80aee5b93">
+    document.documentElement.classList.replace('adaptive', window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    </script>
+    <div id="root"></div>
+    <script nonce="950f4cdb-acee-4b78-8e4a-8da80aee5b93">
+    (function() {
+        window['__canva_public_path__'] = '_assets\/';
+        window['bootstrap'] = JSON.parse('{"base":{"A?":"B","L":false,"N":false,"E":"2e10d65f476070473e8df3a370786fa9b1199553","K":1752855531,"F":{"A?":"B"},"G":"CLIENT_FULL","I":"A","O":{"A?":"B"},"M":"/_online","U":[],"V":[],"a":{"K":"export_website","H":{}},"d":{"A":"wss://www.canva.com/_stream","B":{"F":"export_website"},"C":8388608},"b":{"A?":"H","C":{"a":"DESKTOP_APP"},"D":{"a":"DESKTOP_APP","c":"cs-CZ"},"E":{},"P":[],"Q":[],"R":false,"S":false}},"page":{"A":{"B":{"A?":"A","A":"TAGcbLa0hys","B":1},"C":{"A":1366.0,"B":768.0,"C":"D"},"Q":[],"R":[],"P":"cs-CZ","D":"PP14","E":"","F":[],"G":{},"Y":{},"a":[],"b":[],"V":[],"W":[],"A":[{"A?":"j","Z":{"A?":"A","A":"TAGcbLa0hys","B":1},"a":"PBYbZgVjpZ9vBn2x","R":false,"S":false,"U":false,"Q":{},"v":"B","t":[{"A?":"i","a":"PBfCXxFLkBzdzXhb","R":false,"S":false,"U":false,"Q":{},"W":[],"X":[],"H":[],"L":{},"C":{"A":1366.0,"B":768.0,"C":"D"},"D":{"C":"#ffffff","D":0.0,"F":false,"J":false,"G":false,"H":false},"r":[],"E":[{"A?":"O","A":0.0,"B":0.0,"D":1366.0,"C":768.0,"E":0.0,"F":0.0,"BD":[],"BE":[],"BA":[],"BB":[],"Q":false,"S":false,"P":[],"5":{},"T":{},"W":{},"a":"_website-element-widget?version=v2&pageIndex=0&elementIndex=0&elementType=C&locale=cs-CZ","b":1366.0,"c":768.0}],"I":[]}],"u":[],"L":{}}],"I":[]},"Z":{"A?":"E","M":"cs-CZ","e":false,"f":{"B":"#ffffff","C":"#304254"},"g":[{"A?":"A","K":"PBYbZgVjpZ9vBn2x","L":"/","e":{"A":true}}]},"B":[{"A":"YACgEZ1cb1Q","B":0,"C":"Arimo","D":[{"style":"BOLD","files":[{"url":"_assets/fonts/98c4d2c0223fc8474641c77f923528e9.woff2","format":"WOFF2","unicodeRanges":[],"sizeBytes":194064},{"url":"_assets/fonts/9fd726aeae98b22824f0dc8947036e77.woff","format":"WOFF","unicodeRanges":[],"sizeBytes":234696},{"url":"_assets/fonts/0bb563f2f60ffd4e62b64cb021c33776.otf","format":"OTF","unicodeRanges":[],"sizeBytes":438516}],"subsettedFiles":[],"scriptSubsetFiles":[],"metadata":{"head":{"unitsPerEm":2048,"yMin":-771,"yMax":2116},"hhea":{"ascender":1854,"descender":-434,"lineGap":67},"os2":{"sTypoAscender":1491,"sTypoDescender":-431,"sTypoLineGap":307,"usWinAscent":1854,"usWinDescent":434,"fsSelection":32}}},{"style":"REGULAR","files":[{"url":"_assets/fonts/4ff8a742aa834e35f10ead140b735c45.woff","format":"WOFF","unicodeRanges":[],"sizeBytes":234380},{"url":"_assets/fonts/daee28464eba92254cb149feea6599e3.otf","format":"OTF","unicodeRanges":[],"sizeBytes":436180},{"url":"_assets/fonts/f8f199f09526f79e87644ed227e0f651.woff2","format":"WOFF2","unicodeRanges":[],"sizeBytes":194188}],"subsettedFiles":[],"scriptSubsetFiles":[],"metadata":{"head":{"unitsPerEm":2048,"yMin":-621,"yMax":2007},"hhea":{"ascender":1854,"descender":-434,"lineGap":67},"os2":{"sTypoAscender":1491,"sTypoDescender":-431,"sTypoLineGap":307,"usWinAscent":1854,"usWinDescent":434,"fsSelection":64}}},{"style":"BOLD_ITALICS","files":[{"url":"_assets/fonts/1060345c54d396e76d73f1da7ee200bd.woff2","format":"WOFF2","unicodeRanges":[],"sizeBytes":203232},{"url":"_assets/fonts/7fc2786f9023d4d812357cb787e9ad4b.woff","format":"WOFF","unicodeRanges":[],"sizeBytes":237660},{"url":"_assets/fonts/4de29305db46625343735e840e3d27aa.otf","format":"OTF","unicodeRanges":[],"sizeBytes":435028}],"subsettedFiles":[],"scriptSubsetFiles":[],"metadata":{"head":{"unitsPerEm":2048,"yMin":-771,"yMax":2109},"hhea":{"ascender":1854,"descender":-434,"lineGap":67},"os2":{"sTypoAscender":1491,"sTypoDescender":-431,"sTypoLineGap":307,"usWinAscent":1854,"usWinDescent":434,"fsSelection":33}}},{"style":"ITALICS","files":[{"url":"_assets/fonts/79d14bb61301a10c73c6cb293c29b309.otf","format":"OTF","unicodeRanges":[],"sizeBytes":440740},{"url":"_assets/fonts/ac9b8a560f98d1757a4565a2419d33c3.woff","format":"WOFF","unicodeRanges":[],"sizeBytes":240632},{"url":"_assets/fonts/d257a7100844bc3f98c9021168b6249e.woff2","format":"WOFF2","unicodeRanges":[],"sizeBytes":201132}],"subsettedFiles":[],"scriptSubsetFiles":[],"metadata":{"head":{"unitsPerEm":2048,"yMin":-621,"yMax":2077},"hhea":{"ascender":1854,"descender":-434,"lineGap":67},"os2":{"sTypoAscender":1491,"sTypoDescender":-425,"sTypoLineGap":307,"usWinAscent":1854,"usWinDescent":434,"fsSelection":1}}}],"E":false}],"E":[],"F":[],"G":[],"H":[{"A":"https://www.canva-hosted-embed.com/codelet/bgneqm96xaxk7dbx","Q":false,"B":"Canva","D":1752855531598,"E":"\x3ciframe src=\\"https://bgneqm96xaxk7dbx.canva-hosted-embed.com/codelet/AAEAEGJnbmVxbTk2eGF4azdkYngAAAAAAZgjeyxO7JkRdOjihtis8gQ03RHJ9p4B1gQLN5HLtnlHTSjkO9s/\\" sandbox=\\"allow-same-origin allow-scripts allow-popups allow-forms\\" allowfullscreen=\\"true\\" width=\\"800\\" height=\\"450\\" style=\\"position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 8px;\\" allow=\\"fullscreen\\">\x3c/iframe>","F":1366,"G":768},{"A":"_website-element-widget?version=v2&pageIndex=0&elementIndex=0&elementType=C&locale=cs-CZ","Q":false,"B":"Canva","D":1752855531672,"E":"\x3ciframe src=\\"_website-element-widget?version=v2&pageIndex=0&elementIndex=0&elementType=C&locale=cs-CZ\\" width=\\"1366\\" height=\\"768\\" frameborder=\\"0\\" sandbox=\\"allow-same-origin allow-scripts allow-popups allow-forms allow-popups-to-escape-sandbox\\" style=\\"width:100%;height:100%;border:0\\">\x3c/iframe>","F":1366,"G":768}],"S":[],"K":{"B":"#ffffff","C":"#304254"},"Q":{"A":false,"B":true,"M":true},"R":false,"T":true,"U":false,"V":false},"ui":{"N":false,"A":true,"B":"A","C":false,"D":false,"K":"A","I":true,"J":false}}');
+        window['flags'] = JSON.parse('{"61af18e7":true,"f2ace465":true,"978ce15d":150000.0}');
+        window['cmsg'] = window['cmsg'] || {
+            locale: "cs-CZ",
+            strings: {}
+        };
+    })();
+    </script>
+    <script crossorigin="anonymous" src="_assets/df50ca757589282b.runtime.js" defer integrity="sha512-OuiJ0Pn0n9sKr9PFkgJFQvy/WSTYkTFgZXT4rHeVu8nxSo1yF1lCvFUZGQKFKywsKp9LoYcaPm8SAc3tU1MOzw==" nonce="950f4cdb-acee-4b78-8e4a-8da80aee5b93"></script>
+    <script crossorigin="anonymous" src="_assets/c1fefd034e402325.s4le6a.vendor.js" defer integrity="sha512-U+LQ8Bw6PvtLBFgDSzzdZi67JkLOUVgu9nd0ZpSBpwDrgGUSiAsjhgXw/IfeFob9DNTUes44958WV5jECtA1QA==" nonce="950f4cdb-acee-4b78-8e4a-8da80aee5b93"></script>
+    <script crossorigin="anonymous" src="_assets/f90d92d25d1cd0e3.vendor.js" defer integrity="sha512-M6jk9jbryq7jIVzbpU8D6Xcjfy+cbuTjsd7w+y2vNHWyKDfRLv47TAc015AIC6WzKoZYT8d/jcFyAshhEE7RAg==" nonce="950f4cdb-acee-4b78-8e4a-8da80aee5b93"></script>
+    <script crossorigin="anonymous" src="_assets/6502a21dc1680919.strings.js" integrity="sha512-Js7XSwtzbopohZ3q6ZU5bWULv1xLGKam0AAQ30ss79PgDlxKWp376Ch6NpL+YOCFXxZJjr0NasPuBWK9janRHA==" nonce="950f4cdb-acee-4b78-8e4a-8da80aee5b93"></script>
+    <script crossorigin="anonymous" src="_assets/6d4ab3a709e09d8e.cs-CZ.js" integrity="sha512-BXCGbnX3XgiRZwxLlhFMpjEoSNlIQLRRFZFdQd/WL2SjWCBPkKy4uvRitToKBp5AtuKsk9+73QRj4uAMdqHwbA==" nonce="950f4cdb-acee-4b78-8e4a-8da80aee5b93"></script>
+    <script crossorigin="anonymous" src="_assets/46bf0e9b088e123d.js" defer integrity="sha512-ilShzIddPy09cLWWgKMvKh256cg3wvYBHk0nJlajmZibJ18OOwAsljdWVn0ngX368JPm4rOBG3oVPP3KQlGv3w==" nonce="950f4cdb-acee-4b78-8e4a-8da80aee5b93"></script>
 </body>
 </html>
 
